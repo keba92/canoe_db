@@ -43,6 +43,7 @@ export default function MyEntries() {
                     el['endDate'] = elem.endDate;
                     el['name'] = elem.name;
                     el['deadLine'] = elem.deadLine;
+                    el['discepline'] = elem.discepline
                 }
             })
         })
@@ -55,6 +56,7 @@ export default function MyEntries() {
                 <Button variant="contained" color="primary" onClick={(e)=>{
                     e.preventDefault();
                     localStorage.clear();
+                    localStorage.setItem('user', user.sub)
                     window.location.assign('/createEntries');
                 }}>
                     Создать заявку

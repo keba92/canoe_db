@@ -39,6 +39,7 @@ import AdminTraners from './AdminTraners';
 import AdminSportsmens from './AdminSportsmens';
 import AdminEntries from './AdminEntries';
 import AdminPage from './AdminPage';
+import PrivateRoute from './PrivateRoute';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -215,63 +216,25 @@ function Dashboard() {
       </Drawer>
       <main className={classes.content}>
         <Toolbar />
-          <Route exact path="/calendary">
-            <Calendary />
-          </Route>
-          <Route exact path="/competition">
-            <CompetitionPage />
-          </Route>
-          <Route exact path="/createCompetition">
-            <CreateCompetition />
-          </Route>
-          <Route exact path="/mySchool">
-            <MySchool />
-          </Route>
-          <Route exact path="/createEditSchool">
-            <CreateEditSchool />
-          </Route>
-          <Route exact path="/mySportsmens">
-            <MySportsmens />
-          </Route>
-          <Route exact path="/createSportsmen">
-            <CreateSportsmen />
-          </Route>
-          <Route exact path="/sportsmen">
-            <SportsmenPage />
-          </Route>
-          <Route exact path="/myTraners">
-            <MyTraners />
-          </Route>
-          <Route exact path="/createTraner">
-            <CreateTraner />
-          </Route>
-          <Route exact path="/traner">
-            <TranerPage />
-          </Route>
-          <Route exact path="/myEntries">
-            <MyEntries />
-          </Route>
-          <Route exact path="/createEntries">
-            <CreateEntries />
-          </Route>
-          <Route exact path="/entrie">
-            <EntriePage />
-          </Route>
-          <Route exact path="/adminSchools">
-            <AdminSchools />
-          </Route>
-          <Route exact path="/adminTraners">
-            <AdminTraners />
-          </Route>
-          <Route exact path="/adminSportsmens">
-            <AdminSportsmens />
-          </Route>
-          <Route exact path="/adminEntries">
-            <AdminEntries />
-          </Route>
-          <Route exact path="/adminPage">
-            <AdminPage />
-          </Route>
+          <PrivateRoute exact path="/calendary" component={Calendary} />
+          <PrivateRoute exact path="/competition" component={CompetitionPage} />
+          <PrivateRoute exact path="/createCompetition" component={CreateCompetition} />
+          <PrivateRoute exact path="/mySchool" component={MySchool}/>
+          <PrivateRoute exact path="/createEditSchool" component={CreateEditSchool}/>
+          <PrivateRoute exact path="/mySportsmens" component={MySportsmens}/>
+          <PrivateRoute exact path="/createSportsmen" component={CreateSportsmen} />
+          <PrivateRoute exact path="/sportsmen" component={SportsmenPage} />
+          <PrivateRoute exact path="/myTraners" component={MyTraners} />
+          <PrivateRoute exact path="/createTraner" component={CreateTraner}/>
+          <PrivateRoute exact path="/traner" component={TranerPage} />
+          <PrivateRoute exact path="/myEntries" component={MyEntries} />
+          <PrivateRoute exact path="/createEntries" component={CreateEntries} />
+          <PrivateRoute exact path="/entrie" component={EntriePage} />
+          <PrivateRoute exact path="/adminSchools" component={AdminSchools}/>
+          <PrivateRoute exact path="/adminTraners" component={AdminTraners} />
+          <PrivateRoute exact path="/adminSportsmens" component={AdminSportsmens} />
+          <PrivateRoute exact path="/adminEntries" component={AdminEntries} />
+          <PrivateRoute exact path="/adminPage" component={AdminPage} />
       </main>
     </div>
     </Switch>

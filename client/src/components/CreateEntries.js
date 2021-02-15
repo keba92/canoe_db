@@ -9,6 +9,8 @@ import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import { useAuth0 } from "@auth0/auth0-react";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,14 +41,14 @@ export default function CreateEntries() {
     const [discepline, setDiscepline] = useState([]);
     const [selectDiscepline, setSelectDiscepline] = useState(null);
     const [choiseSportsmen, setChoiseSportsmen] = useState(null);
-    const [entrie, setEntrie] = useState({})
+    const [entrie, setEntrie] = useState({});
+    const [self, setSelf] = useState(false);
     const { user } = useAuth0();
     const today = Date.now();
 
     useEffect(()=>{
         socket.emit('getCompetition');
         socket.on('competition', (data)=>{
-            console.log('competitions', data)
             setCompetitions(data);
         })
         socket.emit('getSportsmens', { idSchool : localStorage.getItem('user')});
@@ -65,6 +67,7 @@ export default function CreateEntries() {
               setSelectCompetition(data.idCompetition);
               setSelectTraner(data.traner);
               setSelectSportsmens(JSON.parse(data.sportsmensList));
+              setDiscepline(JSON.parse(data.discepline));
             }
             localStorage.clear();
           } catch(e) {
@@ -73,14 +76,12 @@ export default function CreateEntries() {
     },[])
 
     const makeDiscepline = (id) => {
-        if(id){
-        const competition = competitions.filter((el) => el._id == id);
-        setDiscepline(JSON.parse(competition[0].discepline))
-        JSON.parse(competition[0].discepline).forEach(e => {
-            selectSportsmens[e] = [];
-        });
-        setSelectSportsmens(selectSportsmens)
-        }
+            const competition = competitions.filter((el) => el._id == id);
+            setDiscepline(JSON.parse(competition[0].discepline))
+            JSON.parse(competition[0].discepline).forEach(e => {
+                selectSportsmens[e] = [];
+            });
+            setSelectSportsmens(selectSportsmens)
     }
 
     const Delete = (e) => {
@@ -238,9 +239,23 @@ export default function CreateEntries() {
                         })}
                         </Select>
                     </FormControl>
+
+                    <FormControlLabel
+                        control={
+                        <Checkbox
+                            checked={self}
+                            onChange={e=> setSelf(e.target.checked)}
+                            name="checkedB"
+                            color="primary"
+                        />
+                        }
+                        label="Лично"
+                    />
                     <Button variant="contained" color="primary" onClick={(e)=>{
                             e.preventDefault();
-                            selectSportsmens[selectDiscepline] = [...selectSportsmens[selectDiscepline], choiseSportsmen]
+                            let nameSportsmen;
+                            (self)?(nameSportsmen = choiseSportsmen+' (Л)'):(nameSportsmen= choiseSportsmen)
+                            selectSportsmens[selectDiscepline] = [...selectSportsmens[selectDiscepline], nameSportsmen]
                             setSelectSportsmens((prev) => prev = selectSportsmens );
                             setChoiseSportsmen('');
                     }}>
@@ -255,7 +270,7 @@ export default function CreateEntries() {
                 Отправить заявку
             </Button> 
         </div>)}
-        {(selectDiscepline&&entrie.traner)&&(<div style={{display: 'flex', flexDirection: 'row-reverse'}}>
+        {(entrie.traner)&&(<div style={{display: 'flex', flexDirection: 'row-reverse'}}>
             <Button variant="contained" color="primary" onClick={editData}>
                 Редактировать заявку
             </Button> 
