@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function MyEntries() {
-    const socket = io("http://localhost:3001/");
+    const socket = io();
     const [entries, setEntries] = useState(null);
     const [competitions, setCompetitions] = useState(null);
     const [newData, setNewData] = useState(null);

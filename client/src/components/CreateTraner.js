@@ -34,7 +34,7 @@ export default function CreateTraner() {
   const [telephone, setTelephone] = useState(null);
   const [school, setSchool] = useState(null);
   const { user } = useAuth0();
-  const socket = io("http://localhost:3001/");
+  const socket = io();
   const classes = useStyles();
   const [traner, setTraner] = useState({});
 

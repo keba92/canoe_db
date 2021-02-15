@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 function Dashboard() {
     const classes = useStyles();
-    const socket = io("http://localhost:3001/");
+    const socket = io();
     const { loginWithRedirect, isAuthenticated, logout, user } = useAuth0();
     
     useEffect(()=>{

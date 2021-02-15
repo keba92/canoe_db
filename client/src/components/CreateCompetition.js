@@ -44,7 +44,7 @@ export default function CreateCompetition() {
   const [description, setDescription] = useState(null);
   const [discepline, setDiscepline] = useState([]);
   const [term, setTerm] = useState(null);
-  const socket = io("http://localhost:3001/");
+  const socket = io();
   const classes = useStyles();
   const [competition, setCompetition] = useState({});
 

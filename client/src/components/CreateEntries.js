@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export default function CreateEntries() {
-    const socket = io("http://localhost:3001/");
+    const socket = io();
     const classes = useStyles();
     const [sportsmens, setSportsmens] = useState([]);
     const [competitions, setCompetitions] = useState(null);

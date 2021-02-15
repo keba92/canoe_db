@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export default function AdminPage() {
-    const socket = io("http://localhost:3001/");
+    const socket = io();
     const [users, setUsers] = useState(null);
     const [select, setSelect] = useState(null)
     const classes = useStyles();

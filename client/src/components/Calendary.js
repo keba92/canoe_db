@@ -11,7 +11,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const Calendary = () =>{
     const [events, setEvents] = useState([]);
     const { user, isAuthenticated } = useAuth0();
-    const socket = io("http://localhost:3001/");
+    const socket = io();
 
     useEffect(()=>{
         socket.emit('getCompetition');

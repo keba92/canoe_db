@@ -40,7 +40,7 @@ export default function CreateSportsmen() {
   const [result, setResult] = useState({});
   const [listResults, setListResults] = useState([]);
   const { user } = useAuth0();
-  const socket = io("http://localhost:3001/");
+  const socket = io();
   const classes = useStyles();
   const [sportsmen, setSportsmen] = useState({})
 

@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 
 export default function TranerPage() {
     const traner = JSON.parse(localStorage.getItem('traner'));
-    const socket = io("http://localhost:3001/");
+    const socket = io();
     const [sportsmens, setSportsmens] = useState(null);
     useEffect(()=>{
         socket.emit('getTranerSportsmens', { name : traner.name});

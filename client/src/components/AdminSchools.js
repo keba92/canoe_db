@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export default function AdminSchools() {
-    const socket = io("http://localhost:3001/");
+    const socket = io();
     const [schools, setSchools] = useState(null);
     const classes = useStyles();
 

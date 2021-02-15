@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export default function AdminTraners() {
-    const socket = io("http://localhost:3001/");
+    const socket = io();
     const [traners, setTraners] = useState(null);
     const classes = useStyles();
 

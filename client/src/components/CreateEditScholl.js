@@ -41,7 +41,7 @@ export default function CreateEditSchool() {
   const [adress, setAdress] = useState(null);
   const [telephone, setTelephone] = useState(null);
   const { user } = useAuth0();
-  const socket = io("http://localhost:3001/");
+  const socket = io();
   const classes = useStyles();
   const [school, setSchool] = useState({});
 

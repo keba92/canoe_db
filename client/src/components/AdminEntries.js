@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export default function AdminEntries() {
-    const socket = io("http://localhost:3001/");
+    const socket = io();
     const [competitions, setCompetitions] = useState(null);
     const [select, setSelect] = useState(null);
     const [entries, setEntries] = useState(null);
