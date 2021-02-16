@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import Typography from '@material-ui/core/Typography';
 import { DataGrid } from '@material-ui/data-grid';
@@ -11,7 +11,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
 import { CSVLink } from "react-csv";
+import { useAuth0 } from "@auth0/auth0-react";
+import ReactToPrint from 'react-to-print';
+import PrintComponent from './PrintComponent';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -57,7 +61,11 @@ export default function AdminEntries() {
     const [newDataCSV, setNewDataCSV] = useState(null);
     const [sportCSV, setSportCSV] = useState(null);
     const [boatClass, setBoatClass] = useState(null);
+    const [sportsmens, setSportsmens] = useState(null);
+    const [akkr, setAkkr] = useState(null);
+    const componentRef = useRef();
     const classes = useStyles();
+    const { user } = useAuth0();
 
     useEffect(()=>{
         socket.emit('getCompetition');
@@ -73,6 +81,16 @@ export default function AdminEntries() {
         socket.on('adminSchools', (data) => {
             setSchools(data);
         })
+        socket.emit('getAdminSportsmens');
+        socket.on('adminSportsmens', (data) => {
+            setSportsmens(data);
+        })
+        if(choiseEntries){
+            dataCSV()
+            sportsmenCSV()
+            classBoat()
+            akkreditation()
+        }
     }, [])
 
     const columns = [
@@ -168,8 +186,29 @@ export default function AdminEntries() {
         setBoatClass(arr)
     }
 
+    const akkreditation = () => {
+        const comp = competitions.filter(el => el._id == select);
+        const newData = sportCSV;
+        newData.forEach(el=> el['comp']=comp[0].name);
+        const sportsmen = newData.map(el=>{
+            let arr;
+            sportsmens.forEach(elem=> {
+                if(elem.name == el.sportsmen){
+                    arr={ 
+                        sportsmen: el.sportsmen,
+                        foto: elem.foto,
+                        comp: el.comp,
+                        school: el.school
+                    }
+                }
+            })
+            return arr
+        })
+        setAkkr(sportsmen);
+    }
+
     return (
-        <div>
+        (JSON.parse(localStorage.getItem('admins')).filter(el=> el.user_id == localStorage.getItem('user')).length!=0)&&(<div>
             <div style={{display: 'flex',justifyContent: 'space-between'}}>
                 <Typography variant="h3" component="h4" gutterBottom>
                     Заявки
@@ -185,9 +224,6 @@ export default function AdminEntries() {
                     </IconButton>
                 </Paper>
             </div>
-
-            
-
             <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center', margin: '10px'}}>
                 <Typography variant="h6" component="h7" gutterBottom>
                     Выберите мероприятие
@@ -219,6 +255,16 @@ export default function AdminEntries() {
                     Скачать Класс лодок
                 </CSVLink>)}
             </div>
+
+            {(akkr)&&(<div style={{display: 'flex', flexFlow: 'column', alignItems: 'center', margin: '10px'}}>
+                <ReactToPrint
+                    trigger={() => <Button variant="contained" size="small" color="primary">Печать аккредитаций</Button>}
+                    content={() => componentRef.current}
+                />
+                <div style={{display:'none'}}>
+                    <PrintComponent data={akkr} ref={componentRef} />
+                </div>
+            </div>)}
             
            
             {(choiseEntries)&&(
@@ -226,6 +272,7 @@ export default function AdminEntries() {
                     {(!newDataCSV)&&(dataCSV())}
                     {(!newDataCSV)&&(sportsmenCSV())}
                     {(!newDataCSV)&&(classBoat())}
+                    {(sportCSV&&!akkr)&&(akkreditation())}
                     <DataGrid 
                         rows={choiseEntries} 
                         columns={columns} 
@@ -237,6 +284,6 @@ export default function AdminEntries() {
                         }}/>
                 </div>
             )}
-        </div>
+        </div>)
     )
 }

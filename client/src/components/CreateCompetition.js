@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import io from 'socket.io-client';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +48,7 @@ export default function CreateCompetition() {
   const socket = io();
   const classes = useStyles();
   const [competition, setCompetition] = useState({});
+  const { user } = useAuth0();
 
   useEffect(()=>{
     try {
@@ -142,7 +144,7 @@ export default function CreateCompetition() {
   }
 
   return (
-    <div className={classes.root}>
+    (JSON.parse(localStorage.getItem('admins')).filter(el=> el.user_id == localStorage.getItem('user')).length!=0)&&(<div className={classes.root}>
       <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : null}`}>
           <input {...getInputProps()} />
           {isDragActive ? <p>Вот прямо сюда!</p> : <p>Бросьте логотип сюда</p>}
@@ -235,22 +237,13 @@ export default function CreateCompetition() {
             onChange={(e)=> setTelephone(e.target.value)}
           />
       </div>
-
-      <TextField
-          id="outlined-multiline-static"
-          label="Multiline"
-          multiline
-          rows={4}
-          defaultValue="Default Value"
-          variant="outlined"
-        />
       <TextField
           label='Краткое описание мероприятия'
           style={{ margin: 8 }}
           placeholder="Введите описание"
           multiline
           fullWidth
-          rows={4}
+          rows={5}
           onChange={(e)=>setDescription(e.target.value)}
           margin="normal"
           InputLabelProps={{
@@ -284,6 +277,6 @@ export default function CreateCompetition() {
                 </div>
             </div>
         </div>
-    </div>
+    </div>)
   );
 }

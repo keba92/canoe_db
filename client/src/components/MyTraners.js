@@ -10,7 +10,7 @@ export default function MyTraners() {
     const [traners, setTraners] = useState(null);
     const { user } = useAuth0();
     useEffect(()=>{
-        socket.emit('getTraners', { idSchool : user.sub});
+        socket.emit('getTraners', { idSchool : localStorage.getItem('user')});
         socket.on('traners', (data) => {
             data.forEach((el) => el['id'] = el['_id'])
             setTraners(data);

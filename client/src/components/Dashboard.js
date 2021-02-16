@@ -111,7 +111,7 @@ function Dashboard() {
         <Toolbar />
         <div className={classes.drawerContainer}>
           {isAuthenticated&&(localStorage.setItem('user', user.sub))}
-          {(isAuthenticated&&JSON.parse(localStorage.getItem('admins')).filter(el=> el.user_id == user.sub).length!=0)&&(<List>
+          {(isAuthenticated&&JSON.parse(localStorage.getItem('admins')).filter(el=> el.user_id == localStorage.getItem('user')).length!=0)&&(<List>
             {['Школы', 'Тренера', 'Спортсмены', 'Календарь', 'Заявки', 'Админка'].map((text, index) => {
               if(text == 'Школы'){
                 return (
@@ -165,7 +165,7 @@ function Dashboard() {
               }  
           })}
           </List>)}
-          {(isAuthenticated&&JSON.parse(localStorage.getItem('admins')).filter(el=> el.user_id == user.sub).length==0)&&(<List>
+          {(isAuthenticated&&JSON.parse(localStorage.getItem('admins')).filter(el=> el.user_id == localStorage.getItem('user')).length==0)&&(<List>
             {['Моя Школа', 'Мои Спортсмены', 'Тренерский состав', 'Календарь соревнований', 'Сформировать заявку'].map((text, index) =>{
               if(text == 'Календарь соревнований'){
                 return (

@@ -7,6 +7,10 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import io from 'socket.io-client';
 import { useAuth0 } from "@auth0/auth0-react";
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,12 +43,18 @@ export default function CreateSportsmen() {
   const [school, setSchool] = useState(null);
   const [result, setResult] = useState({});
   const [listResults, setListResults] = useState([]);
+  const [traners, setTraners] = useState(null);
   const { user } = useAuth0();
   const socket = io();
   const classes = useStyles();
   const [sportsmen, setSportsmen] = useState({})
 
   useEffect(()=>{
+    socket.emit('getAdminTraners');
+    socket.on('adminTraners', (data) => {
+      data.forEach((el) => el['id'] = el['_id'])
+      setTraners(data);
+    })
     try {
       const editSportsmen = localStorage.getItem('sportsmen');
       if(editSportsmen) {
@@ -88,7 +98,7 @@ export default function CreateSportsmen() {
   const saveData = (e) => {
     e.preventDefault();
     const data = {
-      idSchool: user.sub,
+      idSchool: localStorage.getItem('user'),
       foto: foto,
       name: name,
       birthday: birthday,
@@ -106,7 +116,7 @@ export default function CreateSportsmen() {
     e.preventDefault();
     const data = {
       _id: sportsmen._id,
-      idSchool: user.sub,
+      idSchool: localStorage.getItem('user'),
       foto: foto,
       name: name,
       birthday: birthday,
@@ -195,15 +205,22 @@ export default function CreateSportsmen() {
             variant="outlined"
             onChange={(e)=> setFTraner(e.target.value)}
           />
-          <TextField
-            label='Личный тренер'
-            id="outlined-margin-dense"
-            className={classes.textField}
-            defaultValue={sportsmen.nowTraner}
-            placeholder='Введите ФИО личного тренера'
-            variant="outlined"
-            onChange={(e)=> setNowTraner(e.target.value)}
-          />
+
+          <FormControl className={classes.formControl}>
+            <InputLabel>Личный тренер</InputLabel>
+            <Select
+            value={nowTraner}
+            onChange={(e) => setNowTraner(e.target.value)}
+            >
+              <MenuItem value="">
+                  None
+              </MenuItem>
+              {(traners)&&(traners.map((el)=>{
+                  return  <MenuItem value={el.name}>{el.name}</MenuItem>
+              }))}
+            </Select>
+          </FormControl>
+          
           <TextField
             label="Принадлежность"
             className={classes.textField}

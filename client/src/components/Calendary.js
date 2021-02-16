@@ -33,7 +33,7 @@ const Calendary = () =>{
 
     return (
     <div>
-        {(isAuthenticated&&JSON.parse(localStorage.getItem('admins')).filter(el=> el.user_id == user.sub).length!=0)&&(<div style={{float: 'right'}}>
+        {(isAuthenticated&&JSON.parse(localStorage.getItem('admins')).filter(el=> el.user_id == localStorage.getItem('user')).length!=0)&&(<div style={{float: 'right'}}>
             <Button variant="contained" color="primary" href="/createCompetition">
                 Добавить мероприятие
             </Button>

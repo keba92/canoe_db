@@ -1,5 +1,4 @@
 import React from 'react';
-import { Image } from 'cloudinary-react';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { useAuth0 } from "@auth0/auth0-react";
@@ -11,31 +10,30 @@ export default function CompetitionPage() {
     return (
         <div>
             {(isAuthenticated)&&(<div style={{float: 'right'}}>
-                {(JSON.parse(localStorage.getItem('admins')).filter(el=> el.user_id == user.sub).length!=0)&&(
+                {(JSON.parse(localStorage.getItem('admins')).filter(el=> el.user_id == localStorage.getItem('user')).length!=0)&&(
                 <Button variant="contained" color="primary" href="/createCompetition">
                     Редактировать
                 </Button>)}
             </div>)}
             {(competition)&&(
-                <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center', margin: '10px'}}>
+                <div style={{display: 'flex', flexFlow: 'column', margin: '10px'}}>
                     <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start', margin: '10px'}}>
-                        <Image cloud_name="dgeev9d6l" publicId={competition.logo} height="220" />
-                        <div style={{display: 'flex', flexFlow: 'column', justifyContent: 'end', margin: '10px'}}>
+                        <div style={{display: 'flex', flexFlow: 'column', justifyContent: 'end', marginTop: '10px'}}>
                             <div>
                                 <Typography variant="h4" component="h5" gutterBottom>
                                 {competition.name}
                                 </Typography>
                                 <Typography variant="body1" gutterBottom>
-                                    Место проведения: {competition.place}
+                                    Место проведения: <b>{competition.place}</b>
                                 </Typography>
-                                <Typography variant="body2" gutterBottom>
-                                    Начало соревнований: {competition.startDate}
+                                <Typography variant="body1" gutterBottom>
+                                    Начало соревнований: <b>{competition.startDate}</b>
                                 </Typography>
-                                <Typography variant="body2" gutterBottom>
-                                    Окончание соревнований: {competition.endDate}
+                                <Typography variant="body1" gutterBottom>
+                                    Окончание соревнований: <b>{competition.endDate}</b>
                                 </Typography>
-                                <Typography variant="body2" gutterBottom>
-                                    Последний день принятия заявок: {competition.endDate}
+                                <Typography variant="body1" gutterBottom>
+                                    Последний день принятия заявок: <b>{competition.endDate}</b>
                                 </Typography>
                             </div>
                             <div>
@@ -43,14 +41,14 @@ export default function CompetitionPage() {
                                     Контактные данные
                                 </Typography>
                                 <div style={{display: 'flex', flexFlow: 'column', justifyContent: 'start'}}>
-                                    <Typography variant="body2" gutterBottom>
-                                        Главный судья: {competition.mainJudge}
+                                    <Typography variant="body1" gutterBottom>
+                                        Главный судья: <b>{competition.mainJudge}</b>
                                     </Typography>
-                                    <Typography variant="body2" gutterBottom>
-                                        Cекретарь соревнований: {competition.secretary}
+                                    <Typography variant="body1" gutterBottom>
+                                        Cекретарь соревнований: <b>{competition.secretary}</b>
                                     </Typography>
-                                    <Typography variant="body2" gutterBottom>
-                                        Телефон: {competition.telephone}
+                                    <Typography variant="body1" gutterBottom>
+                                        Телефон: <b>{competition.telephone}</b>
                                     </Typography>
                                 </div>
                             </div>
@@ -63,8 +61,8 @@ export default function CompetitionPage() {
                     </div>
                     {discepline.map((el)=>{
                             return(
-                                <div>
-                                    <Typography variant="body2" gutterBottom key={el}>
+                                <div style={{ marginLeft: '10px'}}>
+                                    <Typography variant="body1" gutterBottom key={el}>
                                         {el}
                                     </Typography>
                                 </div>

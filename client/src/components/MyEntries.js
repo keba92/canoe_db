@@ -14,7 +14,7 @@ export default function MyEntries() {
 
     useEffect(()=>{
         if(isAuthenticated) {
-            socket.emit('getMyEntries', { idSchool : user.sub});
+            socket.emit('getMyEntries', { idSchool : localStorage.getItem('user')});
             socket.on('myEntries', (data) => {
                 data.forEach((el) => el['id'] = el['_id'])
                 setEntries(data);

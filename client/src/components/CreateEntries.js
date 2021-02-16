@@ -89,9 +89,9 @@ export default function CreateEntries() {
         if(e.target.id){
             selectSportsmens[e.target.id].splice(e.target.name, 1);
             setSelectSportsmens(selectSportsmens);
+            console.log(selectSportsmens)
         }
         setSelectSportsmens(selectSportsmens);
-        setSelectDiscepline('');
     }
 
     const sendData = (e) => {
@@ -101,7 +101,7 @@ export default function CreateEntries() {
             const today = new Date();
             const data = {
                 idCompetition: selectCompetition,
-                idSchool: user.sub,
+                idSchool: localStorage.getItem('user'),
                 traner: selectTraner,
                 telephone: telephone[0].telephone,
                 dateSend: today.toUTCString(),
@@ -120,7 +120,7 @@ export default function CreateEntries() {
         const data = {
             _id: entrie._id,
             idCompetition: selectCompetition,
-            idSchool: user.sub,
+            idSchool: localStorage.getItem('user'),
             traner: selectTraner,
             telephone: telephone[0].telephone,
             dateSend: today.toUTCString(),
@@ -128,35 +128,6 @@ export default function CreateEntries() {
         }
         socket.emit('editEntries', data);
     }
-
-    const table = () =>{
-            return (<div style={{display: 'flex', justifyContent:'space-between'}}>
-                {Object.keys(selectSportsmens).map((keyName) => {
-                return (
-                    <div style={{display: 'flex', flexFlow: 'column', margin: '3px'}}>
-                        <Typography variant="body1" gutterBottom>
-                            <b>{keyName}</b>
-                            <hr/>
-                        </Typography>
-                        {selectSportsmens[keyName].map((el, index)=> {
-                        return (
-                            <div style={{display: 'flex', flexWrap: 'wrap'}}>
-                                <Typography variant="body2" gutterBottom>
-                                    {el}
-                                </Typography>
-                                <IconButton aria-label="delete" id={keyName} name={index} onClick={Delete}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </div>
-                        )
-                    })}
-                    </div>   
-                )
-            })}
-        </div>
-        )
-    }
-
     return(
         <div>
             <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center', margin: '10px'}}>
@@ -263,7 +234,29 @@ export default function CreateEntries() {
                     </Button>
                 </div>
             </div>)}
-            { (selectTraner)&&(table())}
+            <div style={{display: 'flex', justifyContent:'space-between'}}>
+                {Object.keys(selectSportsmens).map((keyName) => {
+                return (
+                    <div style={{display: 'flex', flexFlow: 'column', margin: '3px'}}>
+                        <Typography variant="body1" gutterBottom>
+                            <b>{keyName}</b>
+                            <hr/>
+                        </Typography>
+                        {selectSportsmens[keyName].map((el, index)=> {
+                        return (
+                            <div style={{display: 'flex', flexWrap: 'wrap'}}>
+                                <Typography variant="body2" gutterBottom>
+                                    {el}
+                                </Typography>
+                                <IconButton aria-label="delete" id={keyName} name={index} onClick={(e)=> Delete(e)}>
+                                    <DeleteIcon fontSize="small"/>
+                                </IconButton>
+                            </div>
+                            )
+                        })}
+                    </div>)})
+                }
+            </div>
         </div>
         {(selectDiscepline&&!entrie.traner)&&(<div style={{display: 'flex', flexDirection: 'row-reverse'}}>
             <Button variant="contained" color="primary" onClick={sendData}>

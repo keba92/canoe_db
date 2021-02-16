@@ -1,6 +1,9 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardContent from '@material-ui/core/CardContent';
 
 
 export default function EntriePage() {
@@ -15,21 +18,21 @@ export default function EntriePage() {
                 </Button>
             </div>)}
             {(entrie)&&(
-                <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center', margin: '10px'}}>
+                <div style={{display: 'flex', flexFlow: 'column', margin: '10px'}}>
                     <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start', margin: '10px'}}>
                         <div style={{display: 'flex', flexFlow: 'column', justifyContent: 'end', margin: '10px'}}>
                             <div>
                                 <Typography variant="h3" component="h4" gutterBottom>
                                 {entrie.name}
                                 </Typography>
-                                <Typography variant="body2" gutterBottom>
-                                    Начало соревнований: {entrie.startDate}
+                                <Typography variant="body1" gutterBottom>
+                                    Начало соревнований: <b>{entrie.startDate}</b>
                                 </Typography>
-                                <Typography variant="body2" gutterBottom>
-                                    Окончание соревнований: {entrie.endDate}
+                                <Typography variant="body1" gutterBottom>
+                                    Окончание соревнований: <b>{entrie.endDate}</b>
                                 </Typography>
-                                <Typography variant="body2" gutterBottom>
-                                    Последний день принятия заявок: {entrie.endDate}
+                                <Typography variant="body1" gutterBottom>
+                                    Последний день принятия заявок: <b>{entrie.endDate}</b>
                                 </Typography>
                             </div>
                             <div>
@@ -37,8 +40,8 @@ export default function EntriePage() {
                                     Контактные данные
                                 </Typography>
                                 <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
-                                    <Typography variant="body2" gutterBottom>
-                                        Телефон Представителя команды: {entrie.telephone}
+                                    <Typography variant="body1" gutterBottom>
+                                        Телефон представителя команды: <b>{entrie.telephone}</b>
                                     </Typography>
                                 </div>
                             </div>
@@ -49,23 +52,27 @@ export default function EntriePage() {
                             Представитель команды: <b>{entrie.traner}</b>
                         </Typography>
                     </div>
-                    <div style={{display: 'flex', justifyContent:'space-between'}}>
+                    <div style={{display: 'flex'}}>
                             {Object.keys(discepline).map((keyName) => {
                             return (
-                                <div style={{display: 'flex', flexFlow: 'column', marginRight: '20px', marginTop: '3px', borderRight: '1px solid gray'}}>
-                                    <Typography variant="body1" gutterBottom>
-                                        <b>{keyName}</b>
-                                        <hr/>
-                                    </Typography>
-                                    {discepline[keyName].map((el)=> {
-                                    return (
-                                        <div style={{display: 'flex', flexWrap: 'wrap', paddingRight: '10px'}}>
-                                            <Typography variant="body2" gutterBottom>
-                                                {el}
-                                            </Typography>
-                                        </div>
-                                    )
-                                })}
+                                <div style={{display: 'flex', flexFlow: 'column', marginRight: '20px', marginTop: '3px', }}>
+                                    <Card >
+                                        <CardActionArea>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h5" component="h2">
+                                                    <b>{keyName}</b>
+                                                    <hr/>
+                                                </Typography>
+                                                {discepline[keyName].map((el)=> {
+                                                    return (
+                                                        <Typography variant="body2" gutterBottom>
+                                                            {el}
+                                                        </Typography>
+                                                    )}
+                                                )}
+                                            </CardContent>
+                                        </CardActionArea>
+                                    </Card>
                                 </div>   
                             )
                         })}

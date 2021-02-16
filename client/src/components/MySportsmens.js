@@ -10,7 +10,7 @@ export default function MySportsmens() {
     const [sportsmens, setSportsmens] = useState(null);
     const { user } = useAuth0();
     useEffect(()=>{
-        socket.emit('getSportsmens', { idSchool : user.sub });
+        socket.emit('getSportsmens', { idSchool : localStorage.getItem('user') });
         socket.on('sportsmens', (data) => {
             data.forEach((el) => el['id'] = el['_id'])
             setSportsmens(data);

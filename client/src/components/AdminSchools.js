@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,6 +34,7 @@ export default function AdminSchools() {
     const socket = io();
     const [schools, setSchools] = useState(null);
     const classes = useStyles();
+    const { user } = useAuth0();
 
     useEffect(()=>{
         socket.emit('getAdminSchools');
@@ -52,7 +54,7 @@ export default function AdminSchools() {
       ];
 
     return (
-        <div>
+        (JSON.parse(localStorage.getItem('admins')).filter(el=> el.user_id == localStorage.getItem('user')).length!=0)&&(<div>
             <div style={{display: 'flex',justifyContent: 'space-between'}}>
                 <Typography variant="h3" component="h4" gutterBottom>
                     Спортивные Школы 
@@ -81,6 +83,6 @@ export default function AdminSchools() {
                         }}/>
                 </div>
             )}
-        </div>
+        </div>)
     )
 }

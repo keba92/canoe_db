@@ -93,7 +93,7 @@ export default function CreateEditSchool() {
   const saveData = (e) => {
     e.preventDefault();
     const data = {
-      idUser: user.sub,
+      idUser: localStorage.getItem('user'),
       foto: foto,
       name: name,
       director: director,
@@ -109,7 +109,7 @@ export default function CreateEditSchool() {
     e.preventDefault();
     const data = {
       _id: school._id,
-      idUser: user.sub,
+      idUser: localStorage.getItem('user'),
       foto: foto,
       name: name,
       director: director,

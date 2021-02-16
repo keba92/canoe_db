@@ -78,7 +78,7 @@ export default function CreateTraner() {
   const saveData = (e) => {
     e.preventDefault();
     const data = {
-      idSchool: user.sub,
+      idSchool: localStorage.getItem('user'),
       foto: foto,
       name: name,
       birthday: birthday,
@@ -92,7 +92,7 @@ export default function CreateTraner() {
     e.preventDefault();
     const data = {
       _id: traner._id,
-      idSchool: user.sub,
+      idSchool: localStorage.getItem('user'),
       foto: foto,
       name: name,
       birthday: birthday,
