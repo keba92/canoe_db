@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import io from 'socket.io-client';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -12,6 +12,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { useAuth0 } from "@auth0/auth0-react";
+import { DataGrid } from '@material-ui/data-grid';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -43,6 +44,8 @@ export default function CreateEntries() {
     const [choiseSportsmen, setChoiseSportsmen] = useState(null);
     const [entrie, setEntrie] = useState({});
     const [self, setSelf] = useState(false);
+    const [headersTabel, setHeadersTabel] = useState([]);
+    const [rowTabel, setRowTabel] = useState([]);
     const { user } = useAuth0();
     const today = Date.now();
 
@@ -65,8 +68,6 @@ export default function CreateEntries() {
               const data = JSON.parse(editEntrie);
               setEntrie(data);
               setSelectCompetition(data.idCompetition);
-              setSelectTraner(data.traner);
-              setSelectSportsmens(JSON.parse(data.sportsmensList));
               setDiscepline(JSON.parse(data.discepline));
             }
             localStorage.clear();
@@ -75,6 +76,36 @@ export default function CreateEntries() {
           }
     },[])
 
+    const headers =() => {
+        const arr = [{ field: 'id', headerName: 'ID', width: 80 }];
+        discepline.forEach((el) =>{
+            arr.push({
+                field: el,
+                headerName: el,
+                width: 370
+            })
+        })
+        setHeadersTabel(arr);
+    }
+
+    const row = () => {
+        let length=0;
+        const arr=[];
+        const copy = selectSportsmens;
+        Object.values(copy).forEach((el)=>(el.length>length)?(length=el.length):(length=length));
+        for(let i=0; i<length; i++) {
+            const obj= {id: i+1};
+            discepline.forEach((el)=> obj[el] ='')
+            Object.keys(copy).forEach((keyName)=>{
+                if(copy[keyName][i]){
+                    obj[keyName] = copy[keyName][i];
+                }  
+            })
+            arr.push(obj)
+        }
+        setRowTabel(arr);
+    }
+
     const makeDiscepline = (id) => {
             const competition = competitions.filter((el) => el._id == id);
             setDiscepline(JSON.parse(competition[0].discepline))
@@ -82,16 +113,6 @@ export default function CreateEntries() {
                 selectSportsmens[e] = [];
             });
             setSelectSportsmens(selectSportsmens)
-    }
-
-    const Delete = (e) => {
-        e.preventDefault();
-        if(e.target.id){
-            selectSportsmens[e.target.id].splice(e.target.name, 1);
-            setSelectSportsmens(selectSportsmens);
-            console.log(selectSportsmens)
-        }
-        setSelectSportsmens(selectSportsmens);
     }
 
     const sendData = (e) => {
@@ -128,6 +149,7 @@ export default function CreateEntries() {
         }
         socket.emit('editEntries', data);
     }
+
     return(
         <div>
             <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center', margin: '10px'}}>
@@ -162,7 +184,11 @@ export default function CreateEntries() {
                     <InputLabel>Выберите руководителя делигации</InputLabel>
                     <Select
                     value={selectTraner}
-                    onChange={(e) => setSelectTraner(e.target.value)}
+                    onChange={(e) => {
+                        setSelectTraner(e.target.value);
+                        makeDiscepline(selectCompetition)
+                        headers();
+                    }}
                     >
                     <MenuItem value="">
                         None
@@ -224,39 +250,36 @@ export default function CreateEntries() {
                     />
                     <Button variant="contained" color="primary" onClick={(e)=>{
                             e.preventDefault();
+                        if(selectDiscepline&&choiseSportsmen){
                             let nameSportsmen;
                             (self)?(nameSportsmen = choiseSportsmen+' (Л)'):(nameSportsmen= choiseSportsmen)
                             selectSportsmens[selectDiscepline] = [...selectSportsmens[selectDiscepline], nameSportsmen]
                             setSelectSportsmens((prev) => prev = selectSportsmens );
                             setChoiseSportsmen('');
+                            row();
+                        }
                     }}>
                         Добавить
                     </Button>
                 </div>
             </div>)}
-            <div style={{display: 'flex', justifyContent:'space-between'}}>
-                {Object.keys(selectSportsmens).map((keyName) => {
-                return (
-                    <div style={{display: 'flex', flexFlow: 'column', margin: '3px'}}>
-                        <Typography variant="body1" gutterBottom>
-                            <b>{keyName}</b>
-                            <hr/>
-                        </Typography>
-                        {selectSportsmens[keyName].map((el, index)=> {
-                        return (
-                            <div style={{display: 'flex', flexWrap: 'wrap'}}>
-                                <Typography variant="body2" gutterBottom>
-                                    {el}
-                                </Typography>
-                                <IconButton aria-label="delete" id={keyName} name={index} onClick={(e)=> Delete(e)}>
-                                    <DeleteIcon fontSize="small"/>
-                                </IconButton>
-                            </div>
-                            )
-                        })}
-                    </div>)})
-                }
-            </div>
+        </div>
+        <div style={{ height: 500, width: '100%' }}>
+            <DataGrid 
+                rows={rowTabel} 
+                columns={headersTabel} 
+                pageSize={15}
+                className='table-style'
+                onCellClick={(e)=>{
+                    // eslint-disable-next-line no-restricted-globals
+                    const answer = confirm(`Удалить пользователя ${e.value}  в классе ${e.field}?`);
+                    if (answer) {
+                        const newList = selectSportsmens[e.field].filter((el)=> el!= e.value);
+                        selectSportsmens[e.field] = newList;
+                        setSelectSportsmens(selectSportsmens)
+                    }
+                }}
+            />
         </div>
         {(selectDiscepline&&!entrie.traner)&&(<div style={{display: 'flex', flexDirection: 'row-reverse'}}>
             <Button variant="contained" color="primary" onClick={sendData}>

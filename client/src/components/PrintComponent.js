@@ -7,7 +7,7 @@ const PrintComponent = React.forwardRef((props, ref) => {
         <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '10px'}} ref={ref}>
             {data.map((el) => {
                 return (
-                    <div style={{display: 'flex', 
+                    el&&(<div style={{display: 'flex', 
                                  flexFlow: 'column',
                                  alignItems: 'center',
                                  margin: '10px',
@@ -23,7 +23,7 @@ const PrintComponent = React.forwardRef((props, ref) => {
                             <h7>{el.school}</h7>
                             <h6><b>{el.sportsmen}</b></h6>
                         </div>
-                    </div>
+                    </div>)
                 )
             })}
         </div>

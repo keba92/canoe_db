@@ -102,9 +102,10 @@ export default function AdminEntries() {
       ];
 
     const headersCSV = [
-        { label: "Команда", key: "school" },
-        { label: "Класс лодки", key: "classBoat" },
-        { label: "Спортсмен", key: "sportsmen" }
+        { label: "id", key: "id" },
+        { label: "Team", key: "school" },
+        { label: "Class", key: "classBoat" },
+        { label: "Sportsmen", key: "sportsmen" }
       ];
     
     const headersSport = [
@@ -144,12 +145,16 @@ export default function AdminEntries() {
             const entry = JSON.parse(obj.sportsmensList);
             Object.keys(entry).forEach((keyName)=> {
                 entry[keyName].forEach((el) => {
-                    const inner = {
-                        school: obj.school,
-                        classBoat: keyName,
-                        sportsmen: el
+                    const id = sportsmens.filter((elem)=> elem.name==el && elem.idSchool==obj.idSchool)
+                    if(id.length!=0){
+                        const inner = {
+                            id: id[0]._id,
+                            school: obj.school,
+                            classBoat: keyName,
+                            sportsmen: el
+                        }
+                        arr.push(inner);
                     }
-                    arr.push(inner);
                 })
             })
         })
@@ -245,13 +250,13 @@ export default function AdminEntries() {
                     }))}
                     </Select>
                 </FormControl>
-                {(newDataCSV)&&(<CSVLink data={newDataCSV} headers={headersCSV} className='csv-link' filename="collection.csv" separator={';'}>
+                {(newDataCSV)&&(<CSVLink data={newDataCSV} headers={headersCSV} className='csv-link' filename="TeamClassSport.csv" separator={';'}>
                     Скачать Команда+Класс+Спортсмен
                 </CSVLink>)}
-                {(sportCSV)&&(<CSVLink data={sportCSV} headers={headersSport} className='csv-link' filename="collection.csv" separator={';'}>
+                {(sportCSV)&&(<CSVLink data={sportCSV} headers={headersSport} className='csv-link' filename="TeamSport.csv" separator={';'}>
                     Скачать Команда+Спортсмен
                 </CSVLink>)}
-                {(sportCSV)&&(<CSVLink data={boatClass} headers={headersClass} className='csv-link' filename="collection.csv" separator={';'}>
+                {(sportCSV)&&(<CSVLink data={boatClass} headers={headersClass} className='csv-link' filename="Class.csv" separator={';'}>
                     Скачать Класс лодок
                 </CSVLink>)}
             </div>
