@@ -437,7 +437,30 @@ mongoose
               }
             );
           });
-          
+
+          socket.on('findSportsmen', (data) => {
+            const { id } = data;
+            sportsmens
+                  .find({ _id: id})
+                  .then((data) => socket.emit('resultSportsmen', data))
+                  .catch((e)=>console.log(e))
+          })
+          socket.on("editResult", (data) => {
+            const { _id, listResults } = data;
+            sportsmens.updateOne(
+              {
+                _id: _id,
+              },
+              {
+                $set: {
+                   listResults: listResults
+                },
+              },
+              (err, result) => {
+                if (err) console.log(err);
+              }
+            );
+          });
           
   })
 

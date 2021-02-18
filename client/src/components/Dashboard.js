@@ -40,6 +40,7 @@ import AdminSportsmens from './AdminSportsmens';
 import AdminEntries from './AdminEntries';
 import AdminPage from './AdminPage';
 import PrivateRoute from './PrivateRoute';
+import ImportResult from './ImportResults';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -112,7 +113,7 @@ function Dashboard() {
         <div className={classes.drawerContainer}>
           {isAuthenticated&&(localStorage.setItem('user', user.sub))}
           {(isAuthenticated&&JSON.parse(localStorage.getItem('admins')).filter(el=> el.user_id == localStorage.getItem('user')).length!=0)&&(<List>
-            {['Школы', 'Тренера', 'Спортсмены', 'Календарь', 'Заявки', 'Админка'].map((text, index) => {
+            {['Школы', 'Тренера', 'Спортсмены', 'Календарь', 'Заявки', 'Админка', 'Загрузка результатов'].map((text, index) => {
               if(text == 'Школы'){
                 return (
                   <ListItem button key={text}>
@@ -153,6 +154,13 @@ function Dashboard() {
                   <ListItem button key={text}>
                     <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                     <Link to='/adminPage'>Админка</Link>
+                  </ListItem>
+                )
+              } else if(text == 'Загрузка результатов'){
+                return (
+                  <ListItem button key={text}>
+                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                    <Link to='/adminImportFile'>Загрузка результатов</Link>
                   </ListItem>
                 )
               } else {
@@ -235,6 +243,7 @@ function Dashboard() {
           <PrivateRoute exact path="/adminSportsmens" component={AdminSportsmens} />
           <PrivateRoute exact path="/adminEntries" component={AdminEntries} />
           <PrivateRoute exact path="/adminPage" component={AdminPage} />
+          <PrivateRoute exact path="/adminImportFile" component={ImportResult} />
       </main>
     </div>
     </Switch>

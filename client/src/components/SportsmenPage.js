@@ -7,6 +7,12 @@ export default function SportsmenPage() {
     const sportsmen = JSON.parse(localStorage.getItem('sportsmen'));
     const result = JSON.parse(sportsmen.listResults);
     result.forEach((el,idx) => el['id'] = idx+1)
+    const columns = [
+      { field: 'id', headerName: 'ID', width: 60 },
+      { field: 'competition', headerName: 'Спортивное мероприятие', width: 600 },
+      { field: 'discipline', headerName: 'Класс лодки', width: 130 },
+      { field: 'place', headerName: 'Место', width: 95 },
+    ];
     return (
         <div>
             {(sportsmen)&&(
@@ -99,23 +105,14 @@ export default function SportsmenPage() {
                 </div>
                 </div>
                 
-                {result.map((el,index)=>{
-                            const columns = [
-                                { field: 'id', headerName: 'ID', width: 70 },
-                                { field: 'competition', headerName: 'Спортивное мероприятие', width: 350 },
-                                { field: 'discipline', headerName: 'Класс лодки', width: 140 },
-                                { field: 'place', headerName: 'Место', width: 100 },
-                              ];
-                            return(
-                                <div style={{ height: 500, width: '100%' }}>
-                                <DataGrid 
-                                    rows={result} 
-                                    columns={columns}
-                                    className='table-style'
-                                    pageSize={15} />
-                                </div>
-                            )
-                        })}
+                {(result)&&
+                  (<div style={{ height: 500, width: '100%' }}>
+                  <DataGrid 
+                      rows={result} 
+                      columns={columns}
+                      className='table-style'
+                      pageSize={15} />
+                  </div>)}
                 </div>
             </div>
             )}
