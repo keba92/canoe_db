@@ -6,11 +6,11 @@ import { Image } from 'cloudinary-react';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import io from 'socket.io-client';
-import { useAuth0 } from "@auth0/auth0-react";
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import { DataGrid } from '@material-ui/data-grid';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,7 +44,7 @@ export default function CreateSportsmen() {
   const [result, setResult] = useState({});
   const [listResults, setListResults] = useState([]);
   const [traners, setTraners] = useState(null);
-  const { user } = useAuth0();
+  const [rowTable, setRowTabel] = useState([]);
   const socket = io();
   const classes = useStyles();
   const [sportsmen, setSportsmen] = useState({})
@@ -70,6 +70,7 @@ export default function CreateSportsmen() {
         setNowTraner(data.nowTraner);
         setSchool(data.school);
         localStorage.clear();
+        row(JSON.parse(data.listResults));
       }
     } catch(e) {
       console.log(e);
@@ -132,9 +133,37 @@ export default function CreateSportsmen() {
 
   const addResult = (e) => {
       e.preventDefault();
-      setListResults([...listResults, result]);
-      setResult({});
+      if(result.competition.length!=0) {
+        setListResults([...listResults, result]);
+        setResult({});
+        row([...listResults, result]);
+      }
   }
+
+  const headers = [
+    { field: 'id', headerName: 'ID', width: 80 },
+    { field: 'competition', headerName: 'Наименование соревнования', width: 400 },
+    { field: 'discipline', headerName: 'Класс лодки', width: 150 },
+    { field: 'place', headerName: 'Место', width: 150 }
+  ];
+
+  const row = (list=listResults) => {
+    const arr = list;
+    arr.forEach((el, idx) => el['id']=idx+1);
+    setRowTabel(arr);
+  }
+
+  const deleteCeill = (rowData)=>{
+    // eslint-disable-next-line no-restricted-globals
+    const answer = confirm(`Удалить результат: ${rowData.competition}, Класс -${rowData.discepline}, Место - ${rowData.place} ?`);
+    if (answer) {
+        const newList = listResults;
+        newList.splice(rowData.id-1, 1)
+        setListResults(newList);
+        row(newList);
+    }
+}
+
 
   return (
     <div className={classes.root}>
@@ -231,18 +260,6 @@ export default function CreateSportsmen() {
           />
       </div>
       <div>
-        <Typography variant="h5" component="h6" gutterBottom>
-          Результаты выступления на соревнованиях
-        </Typography>
-
-        {(listResults.length!=0)&&(listResults.map((el,index)=>{
-            return(
-                <Typography variant="h5" component="h6" gutterBottom key={index}>
-                    {el['competition'] + '  '+ el['discipline'] + '  ' + el['place']}
-                </Typography>
-            )
-        }))}
-
         <div>
           <TextField
             label="Наименование соревнования"
@@ -293,10 +310,25 @@ export default function CreateSportsmen() {
             Добавить результат
           </Button>
         </div>
+
+        <Typography variant="h5" component="h6" gutterBottom>
+          Результаты выступления на соревнованиях
+        </Typography>
+
+        <div style={{ height: 450, width: '100%' }}>
+            <DataGrid 
+                rows={rowTable} 
+                columns={headers} 
+                pageSize={15}
+                className='table-style'
+                onRowClick={(e)=>deleteCeill(e.row)}
+            />
+        </div>
         
         {(!sportsmen.name)&&(<Button variant="contained" color="primary" onClick={saveData}>
           Сохранить
         </Button>)}
+            
         {(sportsmen.name)&&(<Button variant="contained" color="primary" onClick={editData}>
           Редактировать
         </Button>)}

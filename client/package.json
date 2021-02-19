@@ -14,6 +14,7 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
+    "ag-grid-react": "^25.0.1",
     "cloudinary-react": "^1.6.8",
     "css-loader": "^5.0.1",
     "googleapis": "^67.0.0",

@@ -10,7 +10,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import io from 'socket.io-client';
-import { useAuth0 } from "@auth0/auth0-react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +39,6 @@ export default function CreateEditSchool() {
   const [city, setCity] = useState(null);
   const [adress, setAdress] = useState(null);
   const [telephone, setTelephone] = useState(null);
-  const { user } = useAuth0();
   const socket = io();
   const classes = useStyles();
   const [school, setSchool] = useState({});

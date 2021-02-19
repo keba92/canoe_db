@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -7,17 +7,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { useAuth0 } from "@auth0/auth0-react";
 import { DataGrid } from '@material-ui/data-grid';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 500,
+      minWidth: 400,
     },
     selectEmpty: {
       marginTop: theme.spacing(2),
@@ -46,7 +43,6 @@ export default function CreateEntries() {
     const [self, setSelf] = useState(false);
     const [headersTabel, setHeadersTabel] = useState([]);
     const [rowTabel, setRowTabel] = useState([]);
-    const { user } = useAuth0();
     const today = Date.now();
 
     useEffect(()=>{
@@ -69,11 +65,15 @@ export default function CreateEntries() {
               setEntrie(data);
               setSelectCompetition(data.idCompetition);
               setDiscepline(JSON.parse(data.discepline));
+              setSelectSportsmens(JSON.parse(data.sportsmensList));
+              setSelectTraner(data.traner)
+              headers();
+              row();
             }
             localStorage.clear();
-          } catch(e) {
+        } catch(e) {
             console.log(e);
-          }
+        }
     },[])
 
     const headers =() => {
@@ -107,12 +107,12 @@ export default function CreateEntries() {
     }
 
     const makeDiscepline = (id) => {
-            const competition = competitions.filter((el) => el._id == id);
-            setDiscepline(JSON.parse(competition[0].discepline))
-            JSON.parse(competition[0].discepline).forEach(e => {
-                selectSportsmens[e] = [];
-            });
-            setSelectSportsmens(selectSportsmens)
+        const competition = competitions.filter((el) => el._id == id);
+        setDiscepline(JSON.parse(competition[0].discepline))
+        JSON.parse(competition[0].discepline).forEach(e => {
+            selectSportsmens[e] = [];
+        });
+        setSelectSportsmens(selectSportsmens)
     }
 
     const sendData = (e) => {
@@ -148,6 +148,18 @@ export default function CreateEntries() {
             sportsmensList: JSON.stringify(selectSportsmens)
         }
         socket.emit('editEntries', data);
+    }
+
+    const deleteCeill = (e)=>{
+        // eslint-disable-next-line no-restricted-globals
+        const answer = confirm(`Удалить пользователя ${e.value}  в классе ${e.field}?`);
+        if (answer) {
+            const data = selectSportsmens;
+            const newList = data[e.field].filter((el)=> el!= e.value);
+            data[e.field] = newList;
+            setSelectSportsmens(data);
+            row();
+        }
     }
 
     return(
@@ -223,7 +235,7 @@ export default function CreateEntries() {
                 <Typography variant="h6" component="h7" gutterBottom>
                     Выберите спортсмена
                 </Typography>
-                <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
+                <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
                     <FormControl className={classes.formControl}>
                         <InputLabel>Выберите спортсмена</InputLabel>
                         <Select
@@ -265,21 +277,13 @@ export default function CreateEntries() {
             </div>)}
         </div>
         <div style={{ height: 500, width: '100%' }}>
-            <DataGrid 
-                rows={rowTabel} 
-                columns={headersTabel} 
-                pageSize={15}
-                className='table-style'
-                onCellClick={(e)=>{
-                    // eslint-disable-next-line no-restricted-globals
-                    const answer = confirm(`Удалить пользователя ${e.value}  в классе ${e.field}?`);
-                    if (answer) {
-                        const newList = selectSportsmens[e.field].filter((el)=> el!= e.value);
-                        selectSportsmens[e.field] = newList;
-                        setSelectSportsmens(selectSportsmens)
-                    }
-                }}
-            />
+                <DataGrid 
+                    rows={rowTabel} 
+                    columns={headersTabel} 
+                    pageSize={15}
+                    className='table-style'
+                    onCellClick={(e)=>deleteCeill(e)}
+                />
         </div>
         {(selectDiscepline&&!entrie.traner)&&(<div style={{display: 'flex', flexDirection: 'row-reverse'}}>
             <Button variant="contained" color="primary" onClick={sendData}>

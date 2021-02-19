@@ -7,7 +7,6 @@ import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import { useAuth0 } from "@auth0/auth0-react";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,7 +33,6 @@ export default function AdminTraners() {
     const socket = io();
     const [traners, setTraners] = useState(null);
     const classes = useStyles();
-    const { user } = useAuth0();
 
     useEffect(()=>{
         socket.emit('getAdminTraners');

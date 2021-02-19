@@ -5,7 +5,6 @@ import { useDropzone } from 'react-dropzone';
 import { Image } from 'cloudinary-react';
 import Button from '@material-ui/core/Button';
 import io from 'socket.io-client';
-import { useAuth0 } from "@auth0/auth0-react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +32,6 @@ export default function CreateTraner() {
   const [birthday, setBirthday] = useState(null);
   const [telephone, setTelephone] = useState(null);
   const [school, setSchool] = useState(null);
-  const { user } = useAuth0();
   const socket = io();
   const classes = useStyles();
   const [traner, setTraner] = useState({});

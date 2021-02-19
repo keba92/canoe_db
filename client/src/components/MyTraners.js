@@ -3,12 +3,10 @@ import io from 'socket.io-client';
 import Typography from '@material-ui/core/Typography';
 import { DataGrid } from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button';
-import { useAuth0 } from "@auth0/auth0-react";
 
 export default function MyTraners() {
     const socket = io();
     const [traners, setTraners] = useState(null);
-    const { user } = useAuth0();
     useEffect(()=>{
         socket.emit('getTraners', { idSchool : localStorage.getItem('user')});
         socket.on('traners', (data) => {
