@@ -67,9 +67,9 @@ export default function ImportResult() {
                     _id: el.id,
                     listResults: JSON.stringify(comp)
                 })
-                alert('Данные сохранены!')
             })
-        })    
+        })
+        alert('Данные сохранены!')
     }
 
     return(
